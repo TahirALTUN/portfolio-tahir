@@ -1,0 +1,319 @@
+---
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  category: string | undefined;
+  categoryKey: string;
+  title: string | undefined;
+  desc: string | undefined;
+  index: number;
+  embedUrl?: string | null;
+  thumbnail?: string | null;
+  videoUrl?: string | null;
+  lang: 'en' | 'tr';
+}
+
+const { category, categoryKey, title, desc, index, embedUrl, thumbnail, videoUrl, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const catColorMap: Record<string, string> = {
+  lms: 'var(--cat-lms)',
+  ai: 'var(--cat-ai)',
+  storyline: 'var(--cat-storyline)',
+  robotics: 'var(--cat-robotics)',
+  web: 'var(--cat-web)',
+  interactive: 'var(--cat-interactive)',
+};
+
+const catColor = catColorMap[categoryKey] ?? 'var(--text-accent)';
+const hasEmbed = !!embedUrl;
+const hasVideo = !!videoUrl;
+---
+
+<div
+  class={`project-card reveal-on-scroll reveal-stagger ${hasEmbed ? 'has-embed' : ''} ${hasVideo ? 'has-video' : ''} ${!hasEmbed && !hasVideo ? 'no-embed' : ''}`}
+  style={`--stagger: ${index % 4}; --cat-color: ${catColor};`}
+  data-category={categoryKey}
+  data-embed-url={embedUrl ?? undefined}
+  data-embed-title={hasEmbed ? title : undefined}
+  data-video-url={videoUrl ?? undefined}
+  role={hasEmbed || hasVideo ? 'button' : undefined}
+  tabindex={hasEmbed || hasVideo ? '0' : undefined}
+  aria-label={title}
+>
+  <!-- Visual area -->
+  <div class="card-visual">
+    {thumbnail ? (
+      <img src={thumbnail} alt={title} class="visual-img" loading="lazy" />
+    ) : (
+      <>
+        <div class="visual-gradient"></div>
+        <div class="visual-grid"></div>
+      </>
+    )}
+    
+    {!hasEmbed && !hasVideo && (
+      <div class="coming-soon-badge">
+        <span>{t('port.status.coming')}</span>
+      </div>
+    )}
+
+    {hasVideo && (
+      <div class="video-play-badge">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="white" stroke="none">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </div>
+    )}
+
+    <div class="visual-tag">
+      <span>{category}</span>
+    </div>
+  </div>
+
+  <!-- Info -->
+  <div class="card-info">
+    <h3 class="card-title">{title}</h3>
+    <p class="card-desc">{desc}</p>
+    <div class="card-cta">
+      <span>{hasEmbed ? (categoryKey === 'storyline' ? 'View interactive' : 'View project') : hasVideo ? '▶ Video' : t('port.status.coming')}</span>
+      {(hasEmbed || hasVideo) && (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 17L17 7M17 7H7M17 7v10"/>
+        </svg>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+    text-decoration: none;
+    transition:
+      transform 0.4s cubic-bezier(0.25, 1, 0.3, 1),
+      box-shadow 0.4s ease,
+      border-color 0.3s ease;
+  }
+
+  .project-card.has-embed {
+    cursor: pointer;
+  }
+
+  .project-card.no-embed {
+    cursor: default;
+    opacity: 0.85;
+  }
+
+  .project-card.has-video {
+    cursor: pointer;
+  }
+
+  .project-card.has-embed:hover,
+  .project-card.has-video:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in srgb, var(--cat-color) 30%, transparent 70%);
+  }
+
+  .project-card.no-embed:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Visual panel */
+  .card-visual {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: color-mix(in srgb, var(--cat-color) 10%, #F8F7F5 90%);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .visual-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1);
+  }
+
+  .project-card:hover .visual-img {
+    transform: scale(1.08);
+  }
+
+  .project-card:hover .card-visual {
+    background: color-mix(in srgb, var(--cat-color) 16%, #F8F7F5 84%);
+  }
+
+  /* Soft diagonal gradient */
+  .visual-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--cat-color) 20%, transparent 80%) 0%,
+      transparent 60%
+    );
+  }
+
+  /* Subtle dot grid pattern */
+  .visual-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--cat-color) 40%, transparent 60%) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.18;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+  }
+
+  .project-card:hover .visual-grid {
+    opacity: 0.28;
+    transform: scale(1.06) rotate(2deg);
+  }
+
+  /* Category tag in visual */
+  .visual-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .visual-tag span {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: var(--radius-pill);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cat-color);
+    font-family: var(--font-sans);
+  }
+
+  /* Coming Soon Badge */
+  .coming-soon-badge {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 2;
+  }
+
+  .coming-soon-badge span {
+    padding: 0.5rem 1.2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(4px);
+    animation: badgeUp 0.4s ease forwards;
+  }
+
+  @keyframes badgeUp {
+    to { transform: translateY(0); }
+  }
+
+  /* Video play badge */
+  .video-play-badge {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 2;
+    transition: background 0.3s ease;
+  }
+
+  .video-play-badge svg {
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    transition: transform 0.3s ease;
+  }
+
+  .project-card:hover .video-play-badge {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .project-card:hover .video-play-badge svg {
+    transform: scale(1.15);
+  }
+
+  /* Info panel */
+  .card-info {
+    padding: 1.5rem 1.6rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .card-title {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--text-main);
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-cta {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: var(--cat-color);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .project-card:hover .card-cta {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  :global(html[data-theme="dark"]) .project-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  :global(html[data-theme="dark"]) .card-visual {
+    background: color-mix(in srgb, var(--cat-color) 18%, var(--surface-1) 82%);
+  }
+
+  :global(html[data-theme="dark"]) .project-card:hover .card-visual {
+    background: color-mix(in srgb, var(--cat-color) 24%, var(--surface-1) 76%);
+  }
+</style>

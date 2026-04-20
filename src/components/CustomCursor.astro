@@ -1,0 +1,226 @@
+---
+// Custom Cursor Component — premium dot + ring design
+---
+
+<div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+
+<style>
+  /* Hide the default cursor everywhere */
+  :global(html.has-custom-cursor),
+  :global(html.has-custom-cursor *) {
+    cursor: none !important;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  :global(html.has-custom-cursor) .cursor-dot,
+  :global(html.has-custom-cursor) .cursor-ring {
+    opacity: 1;
+  }
+
+  /* Inner dot — small, precise, warm accent */
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-warm);
+    transform: translate(-50%, -50%);
+    mix-blend-mode: normal;
+  }
+
+  /* Outer ring — larger, follows with delay */
+  .cursor-ring {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--accent-warm);
+    background: transparent;
+    transform: translate(-50%, -50%) scale(1);
+    transition:
+      width 0.35s cubic-bezier(0.25, 1, 0.3, 1),
+      height 0.35s cubic-bezier(0.25, 1, 0.3, 1),
+      border-color 0.35s ease,
+      background 0.35s ease,
+      opacity 0.3s ease;
+  }
+
+  /* Hover state — ring grows, fills with subtle color */
+  .cursor-ring.is-hovering {
+    width: 56px;
+    height: 56px;
+    border-color: var(--accent-cool);
+    background: rgba(44, 62, 80, 0.08);
+  }
+
+  .cursor-dot.is-hovering {
+    background: var(--accent-cool);
+  }
+
+  /* Clicking state — ring shrinks */
+  .cursor-ring.is-clicking {
+    width: 28px;
+    height: 28px;
+    border-width: 2.5px;
+  }
+
+  /* Text hover — ring becomes a text indicator */
+  .cursor-ring.is-text {
+    width: 4px;
+    height: 28px;
+    border-radius: 2px;
+    border-color: var(--ink-high);
+    background: var(--ink-high);
+    opacity: 0.5;
+  }
+
+  /* Dark mode adjustments */
+  :global(html[data-theme="dark"]) .cursor-ring {
+    border-color: var(--accent-warm);
+  }
+
+  :global(html[data-theme="dark"]) .cursor-ring.is-hovering {
+    border-color: var(--accent-cool);
+    background: rgba(93, 173, 226, 0.1);
+  }
+
+  /* Hide on touch/mobile */
+  @media (hover: none), (pointer: coarse) {
+    .cursor-dot,
+    .cursor-ring {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initCustomCursor() {
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    if (!dot || !ring) return;
+
+    // Don't initialize on touch devices
+    if (window.matchMedia('(hover: none)').matches || 'ontouchstart' in window) {
+      return;
+    }
+
+    document.documentElement.classList.add('has-custom-cursor');
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let ringX = -100;
+    let ringY = -100;
+    let isVisible = false;
+
+    // Smooth interpolation factor (lower = more lag, more elegant)
+    const ringLerp = 0.15;
+
+    function moveDot(x: number, y: number) {
+      dot.style.left = x + 'px';
+      dot.style.top = y + 'px';
+    }
+
+    function moveRing(x: number, y: number) {
+      ring.style.left = x + 'px';
+      ring.style.top = y + 'px';
+    }
+
+    function animate() {
+      // Ring follows mouse with smooth lerp
+      ringX += (mouseX - ringX) * ringLerp;
+      ringY += (mouseY - ringY) * ringLerp;
+
+      moveDot(mouseX, mouseY);
+      moveRing(ringX, ringY);
+
+      requestAnimationFrame(animate);
+    }
+
+    // Track mouse position
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      if (!isVisible) {
+        isVisible = true;
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+      }
+    });
+
+    // Hide when mouse leaves the window
+    document.addEventListener('mouseleave', () => {
+      isVisible = false;
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+      isVisible = true;
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+    });
+
+    // Click feedback
+    document.addEventListener('mousedown', () => {
+      ring.classList.add('is-clicking');
+    });
+
+    document.addEventListener('mouseup', () => {
+      ring.classList.remove('is-clicking');
+    });
+
+    // Detect interactive element hovers
+    function addHoverListeners() {
+      const interactiveSelectors = 'a, button, [role="button"], .interactive-card, .filter-pill, .cover-arrow, .close-btn, .lang-link, .theme-switch, .social-icon-link';
+      const textSelectors = 'input, textarea, [contenteditable]';
+
+      document.querySelectorAll(interactiveSelectors).forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          dot.classList.add('is-hovering');
+          ring.classList.add('is-hovering');
+        });
+        el.addEventListener('mouseleave', () => {
+          dot.classList.remove('is-hovering');
+          ring.classList.remove('is-hovering');
+        });
+      });
+
+      document.querySelectorAll(textSelectors).forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          ring.classList.add('is-text');
+        });
+        el.addEventListener('mouseleave', () => {
+          ring.classList.remove('is-text');
+        });
+      });
+    }
+
+    addHoverListeners();
+
+    // Re-attach listeners when DOM changes (e.g. after card expand)
+    const observer = new MutationObserver(() => {
+      addHoverListeners();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Start animation loop
+    requestAnimationFrame(animate);
+  }
+
+  // Initialize
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCustomCursor);
+  } else {
+    initCustomCursor();
+  }
+  document.addEventListener('astro:page-load', initCustomCursor);
+</script>

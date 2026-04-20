@@ -1,0 +1,531 @@
+---
+import { useTranslations } from '../i18n/utils';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  lang: 'en' | 'tr';
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const projects = [
+  // ── Storyline İçerikleri (9 adet) ──
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.3.title'),
+    desc: t('port.3.desc'),
+    embedUrl: '/storyline/project-1/T.C.%20Gen%C3%A7lik%20ve%20Spor%20Bakanl%C4%B1%C4%9F%C4%B1%203289%20Say%C4%B1l%C4%B1%20Kanun%20CB%C4%B0KO%20E%C4%9Fitimi%20-%20DEMO/story.html',
+    thumbnail: '/storyline/project-1/T.C.%20Gen%C3%A7lik%20ve%20Spor%20Bakanl%C4%B1%C4%9F%C4%B1%203289%20Say%C4%B1l%C4%B1%20Kanun%20CB%C4%B0KO%20E%C4%9Fitimi%20-%20DEMO/story_content/thumbnail.jpg',
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.5.title'),
+    desc: t('port.5.desc'),
+    embedUrl: '/storyline/project-2/About%20Me%20-%202/story.html',
+    thumbnail: '/storyline/project-2/About%20Me%20-%202/story_content/thumbnail.jpg',
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.6.title'),
+    desc: t('port.6.desc'),
+    embedUrl: '/storyline/project-3/Komsularimiz/story.html',
+    thumbnail: '/storyline/project-3/Komsularimiz/story_content/thumbnail.jpg',
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.7.title'),
+    desc: t('port.7.desc'),
+    embedUrl: '/storyline/project-4/cokanlamlisozcukler/story.html',
+    thumbnail: '/storyline/project-4/cokanlamlisozcukler/story_content/thumbnail.jpg',
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.8.title'),
+    desc: t('port.8.desc'),
+    embedUrl: '/storyline/project-5/Mod%C3%BCl%20Sablonu/story.html',
+    thumbnail: '/storyline/project-5/Mod%C3%BCl%20Sablonu/story_content/thumbnail.jpg',
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.9.title'),
+    desc: t('port.9.desc'),
+    embedUrl: '/storyline/project-6/PedaTechStudio/story.html',
+    thumbnail: '/storyline/project-6/PedaTechStudio/story_content/thumbnail.jpg',
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.10.title'),
+    desc: t('port.10.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.11.title'),
+    desc: t('port.11.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+  {
+    categoryKey: 'storyline',
+    category: t('port.cat.storyline'),
+    title: t('port.12.title'),
+    desc: t('port.12.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+  // ── LMS Systems (2 adet) ──
+  {
+    categoryKey: 'lms',
+    category: t('port.cat.lms'),
+    title: t('port.1.title'),
+    desc: t('port.1.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+  {
+    categoryKey: 'lms',
+    category: t('port.cat.lms'),
+    title: t('port.13.title'),
+    desc: t('port.13.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+  // ── AI for Learning (2 adet) ──
+  {
+    categoryKey: 'ai',
+    category: t('port.cat.ai'),
+    title: t('port.2.title'),
+    desc: t('port.2.desc'),
+    embedUrl: null as string | null,
+    thumbnail: '/thumbnails/ai-documentary.webp',
+    videoUrl: 'https://youtu.be/kdQ8ZJkbhNY',
+  },
+  {
+    categoryKey: 'ai',
+    category: t('port.cat.ai'),
+    title: t('port.14.title'),
+    desc: t('port.14.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+  // ── Robotics & Coding (2 adet) ──
+  {
+    categoryKey: 'robotics',
+    category: t('port.cat.robotics'),
+    title: t('port.4.title'),
+    desc: t('port.4.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+  {
+    categoryKey: 'robotics',
+    category: t('port.cat.robotics'),
+    title: t('port.15.title'),
+    desc: t('port.15.desc'),
+    embedUrl: null as string | null,
+    thumbnail: null as string | null,
+  },
+];
+
+const allLabel = lang === 'tr' ? 'Tümü' : 'All';
+const filterLabels: Record<string, string> = {
+  lms: t('port.cat.lms'),
+  ai: t('port.cat.ai'),
+  storyline: t('port.cat.storyline'),
+  robotics: t('port.cat.robotics'),
+};
+---
+
+<div class="portfolio-wrapper">
+
+  <!-- Header -->
+  <header class="portfolio-header reveal-on-scroll">
+    <p class="port-eyebrow">{t('portfolio.subtitle')}</p>
+    <h1 class="port-title">{t('portfolio.title')}</h1>
+    <p class="port-note">{t('portfolio.coming_soon')}</p>
+  </header>
+
+  <!-- Category filters -->
+  <div class="filter-row reveal-on-scroll" id="filter-row" role="group" aria-label="Filter projects by category">
+    <button class="filter-pill active" data-filter="all">{allLabel}</button>
+    {Object.entries(filterLabels).map(([key, label]) => (
+      <button class="filter-pill" data-filter={key} style={`--cat-color: var(--cat-${key})`}>{label}</button>
+    ))}
+  </div>
+
+  <!-- Projects grid -->
+  <div class="projects-grid" id="projects-grid">
+    {projects.map((project, index) => (
+      <div class="project-slot" data-category={project.categoryKey}>
+        <ProjectCard
+          categoryKey={project.categoryKey}
+          category={project.category}
+          title={project.title}
+          desc={project.desc}
+          index={index}
+          embedUrl={project.embedUrl}
+          thumbnail={project.thumbnail}
+          videoUrl={(project as any).videoUrl ?? null}
+          lang={lang}
+        />
+      </div>
+    ))}
+  </div>
+
+
+
+  <!-- Empty state (hidden by default) -->
+  <div class="empty-state" id="empty-state" aria-hidden="true">
+    <p>No projects in this category yet — check back soon.</p>
+  </div>
+
+</div>
+
+<style>
+  .portfolio-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-bottom: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  /* Header */
+  .portfolio-header {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .port-eyebrow {
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-cool);
+    font-family: var(--font-sans);
+  }
+
+  .port-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--ink-high);
+    line-height: 1.05;
+  }
+
+  .port-note {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-style: italic;
+    opacity: 0.7;
+    font-family: var(--font-sans);
+  }
+
+  /* Filter row */
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filter-pill {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 1.2rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    font-family: var(--font-sans);
+    border: 1px solid rgba(0,0,0,0.04);
+    background: rgba(0,0,0,0.015);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.5);
+    color: var(--ink-mid);
+    transition: all var(--transition-fast);
+  }
+
+  .filter-pill:hover {
+    background: rgba(255,255,255,0.8);
+    color: var(--text-main);
+    border-color: rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    transform: translateY(-1px);
+  }
+
+  .filter-pill.active {
+    background: var(--text-main);
+    border-color: var(--text-main);
+    color: #fff;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .filter-pill[data-filter]:not([data-filter="all"]).active {
+    background: var(--cat-color, var(--text-main));
+    border-color: var(--cat-color, var(--text-main));
+    color: #fff;
+    box-shadow: var(--shadow-sm); /* Elevated for colored pill */
+  }
+
+  /* Projects grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .project-slot {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .project-slot.hidden {
+    display: none;
+  }
+
+  .project-slot.fading-out {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+  }
+
+  .empty-state.visible {
+    display: block;
+  }
+
+  :global(html[data-theme="dark"]) .filter-pill {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--ink-mid);
+    box-shadow: none;
+  }
+
+  :global(html[data-theme="dark"]) .filter-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--text-main);
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function initPortfolioFilter() {
+    const filterRow = document.getElementById('filter-row');
+    const grid = document.getElementById('projects-grid');
+    const emptyState = document.getElementById('empty-state');
+
+    if (!filterRow || !grid) return;
+
+    const pills = filterRow.querySelectorAll<HTMLButtonElement>('.filter-pill');
+    const slots = grid.querySelectorAll<HTMLElement>('.project-slot');
+
+    // Filtering logic
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const filter = pill.dataset.filter ?? 'all';
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+
+        let visibleCount = 0;
+        slots.forEach(slot => {
+          const cat = slot.dataset.category ?? '';
+          const match = filter === 'all' || cat === filter;
+          slot.classList.toggle('hidden', !match);
+          if (match) visibleCount++;
+        });
+
+        if (emptyState) {
+          emptyState.classList.toggle('visible', visibleCount === 0);
+          emptyState.setAttribute('aria-hidden', visibleCount > 0 ? 'true' : 'false');
+        }
+      });
+    });
+
+    // ── Create overlay dynamically on document.body to escape stacking contexts ──
+    let overlay = document.getElementById('embed-overlay-global');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'embed-overlay-global';
+      overlay.hidden = true;
+      overlay.innerHTML = `
+        <div class="embed-overlay-header">
+          <span class="embed-overlay-title"></span>
+          <button type="button" class="embed-overlay-close" aria-label="Close">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            <span>KAPAT</span>
+          </button>
+        </div>
+        <div class="embed-overlay-body">
+          <iframe src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+      `;
+
+      // Apply styles inline to guarantee visibility (no Astro scope issues)
+      overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+        z-index: 99999; background: #000; display: none; flex-direction: column;
+        animation: embedFadeIn 0.3s ease;
+      `;
+
+      const header = overlay.querySelector('.embed-overlay-header') as HTMLElement;
+      header.style.cssText = `
+        background: #111; border-bottom: 1px solid rgba(255,255,255,0.15);
+        height: 60px; display: flex; align-items: center; justify-content: space-between;
+        padding: 0 20px; flex-shrink: 0; z-index: 10;
+      `;
+
+      const titleEl = overlay.querySelector('.embed-overlay-title') as HTMLElement;
+      titleEl.style.cssText = `
+        font-family: system-ui, -apple-system, sans-serif; font-weight: 500;
+        font-size: 0.9rem; color: #eee; white-space: nowrap; overflow: hidden;
+        text-overflow: ellipsis;
+      `;
+
+      const closeBtn = overlay.querySelector('.embed-overlay-close') as HTMLButtonElement;
+      closeBtn.style.cssText = `
+        all: unset; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        padding: 10px 22px; background: #ffffff; border: 2px solid #ffffff;
+        border-radius: 50px; color: #000; font-weight: 700; font-size: 0.82rem;
+        letter-spacing: 0.06em; font-family: system-ui, -apple-system, sans-serif;
+        flex-shrink: 0; transition: all 0.2s ease; z-index: 20;
+      `;
+      closeBtn.addEventListener('mouseenter', () => {
+        closeBtn.style.background = '#ff4444';
+        closeBtn.style.color = '#fff';
+        closeBtn.style.borderColor = '#ff4444';
+        closeBtn.style.transform = 'scale(1.05)';
+      });
+      closeBtn.addEventListener('mouseleave', () => {
+        closeBtn.style.background = '#ffffff';
+        closeBtn.style.color = '#000';
+        closeBtn.style.borderColor = '#ffffff';
+        closeBtn.style.transform = 'scale(1)';
+      });
+
+      const body = overlay.querySelector('.embed-overlay-body') as HTMLElement;
+      body.style.cssText = `flex: 1; position: relative; background: #000;`;
+
+      const iframeEl = overlay.querySelector('iframe') as HTMLIFrameElement;
+      iframeEl.style.cssText = `position: absolute; inset: 0; width: 100%; height: 100%; border: none;`;
+
+      // Add fadeIn keyframe if not exists
+      if (!document.getElementById('embed-fade-style')) {
+        const style = document.createElement('style');
+        style.id = 'embed-fade-style';
+        style.textContent = `
+          @keyframes embedFadeIn { from { opacity: 0; } to { opacity: 1; } }
+          body.embed-open { overflow: hidden !important; }
+        `;
+        document.head.appendChild(style);
+      }
+
+      document.body.appendChild(overlay);
+    }
+
+    const iframe = overlay.querySelector('iframe') as HTMLIFrameElement;
+    const titleSpan = overlay.querySelector('.embed-overlay-title') as HTMLElement;
+    const closeBtn = overlay.querySelector('.embed-overlay-close') as HTMLButtonElement;
+
+    const closeOverlay = () => {
+      overlay!.hidden = true;
+      overlay!.style.display = 'none';
+      iframe.src = '';
+      document.body.classList.remove('embed-open');
+    };
+
+    const openOverlay = (src: string, label: string) => {
+      iframe.src = src;
+      titleSpan.textContent = label;
+      overlay!.hidden = false;
+      overlay!.style.display = 'flex';
+      document.body.classList.add('embed-open');
+    };
+
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeOverlay();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay && !overlay.hidden) {
+        closeOverlay();
+      }
+    });
+
+    // Embed logic (Storyline projects)
+    const embedCards = grid.querySelectorAll<HTMLElement>('.project-card.has-embed');
+    embedCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const url = card.dataset.embedUrl;
+        const label = card.dataset.embedTitle;
+        if (url) openOverlay(url, label || 'Project Preview');
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+
+    // Video logic (YouTube cards)
+    const videoCards = grid.querySelectorAll<HTMLElement>('.project-card.has-video');
+    videoCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const videoUrl = card.dataset.videoUrl;
+        if (videoUrl) {
+          let embedSrc = videoUrl;
+          const shortMatch = videoUrl.match(/youtu\.be\/([\w-]+)/);
+          const longMatch = videoUrl.match(/youtube\.com\/watch\?v=([\w-]+)/);
+          const videoId = shortMatch?.[1] || longMatch?.[1];
+          if (videoId) {
+            embedSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+          }
+          openOverlay(embedSrc, card.getAttribute('aria-label') || 'Video');
+        }
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initPortfolioFilter);
+  document.addEventListener('astro:page-load', initPortfolioFilter);
+</script>

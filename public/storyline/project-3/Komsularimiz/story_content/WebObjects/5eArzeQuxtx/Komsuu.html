@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ukrayna - Eğitim Sahnesi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background:linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .scene-container {
+            width: 960px;
+            height: 540px;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .info-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            background:url("kiev.jpg") center/cover no-repeat;  
+            
+        }
+
+        .flag-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .flag-container img {
+            width: 100px;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .info-face {
+            padding: 20px 30px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .info-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            text-align: center;
+            margin: 10px 0 20px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.596);
+            padding: 12px;
+            border-radius: 12px;
+            border-left: 10px solid #009905;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-label {
+            font-weight: 1000;
+            font-size: 15px;
+            color: #850000;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: 800;
+            font-size: 15px;
+            color: #000000;
+        }
+
+        .description-section {
+            background: rgba(255, 255, 255, 0.49);
+            padding: 18px;
+            border-radius: 10px;
+            border: 4px solid #00ddff51;
+        }
+
+        .description-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #000000;
+            margin-bottom: 4px;
+        }
+
+        .karaoke-text {
+            font-weight: 600;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #2fb922;
+        }
+
+        .karaoke-word {
+            display: inline;
+            transition: all 0.3s ease;
+            color: #000000;
+        }
+
+        .karaoke-word.active {
+            color: #0077ff;
+            background: linear-gradient(135deg, #00aeff, #00e1ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgb(0, 140, 255);
+            transform: scale(1.05);
+        }
+
+        .karaoke-word.completed {
+            color: #ffffff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="scene-container">
+        <div class="info-card">
+            <div class="flag-container">
+                <img src="Ukrain.flag.png" alt="KKTC Bayrağı">
+            </div>
+            <div class="info-face">
+                <h1 class="info-title">UKRAYNA</h1>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Başkent</div>
+                        <div class="info-value">Kiev</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Resmi Dili</div>
+                        <div class="info-value">Ukraynaca</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Para Birimi</div>
+                        <div class="info-value">Hrivna</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Bölge</div>
+                        <div class="info-value">Doğu Avrupa</div>
+                    </div>
+                </div>
+
+                <div class="description-section">
+                    <div class="description-title">Açıklama</div>
+                    <div class="karaoke-text" id="karaokeText">
+                        <span class="karaoke-word">"Ülkemizin</span>
+                        <span class="karaoke-word">kuzeyinde</span>
+                        <span class="karaoke-word">bulunan</span>
+                        <span class="karaoke-word">Ukrayna’nın</span>
+                        <span class="karaoke-word">doğu</span>
+                        <span class="karaoke-word">ve</span>
+                        <span class="karaoke-word">kuzeydoğusunda</span>
+                        <span class="karaoke-word">Rusya,</span>
+                        <span class="karaoke-word">kuzeyinde</span>
+                        <span class="karaoke-word">Belarus,</span>
+                        <span class="karaoke-word">batısında</span>
+                        <span class="karaoke-word">Polonya</span>
+                        <span class="karaoke-word">ve</span>
+                        <span class="karaoke-word">Slovakya,</span>
+                        <span class="karaoke-word">güneybatısında</span>
+                        <span class="karaoke-word">Macaristan,</span>
+                        <span class="karaoke-word">Romanya</span>
+                        <span class="karaoke-word">ve</span>
+                        <span class="karaoke-word">Moldova</span>
+                        <span class="karaoke-word">bulunmaktadır.</span>
+                        <span class="karaoke-word">Ukrayna</span>
+                        <span class="karaoke-word">sahip</span>
+                        <span class="karaoke-word">olduğu</span>
+                        <span class="karaoke-word">tarım</span>
+                        <span class="karaoke-word">arazileri</span>
+                        <span class="karaoke-word">ve</span>
+                        <span class="karaoke-word">enerji</span>
+                        <span class="karaoke-word">nakil</span>
+                        <span class="karaoke-word">hatları</span>
+                        <span class="karaoke-word">bakımından</span>
+                        <span class="karaoke-word">stratejik</span>
+                        <span class="karaoke-word">bir</span>
+                        <span class="karaoke-word">öneme</span>
+                        <span class="karaoke-word">sahiptir.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+</html>

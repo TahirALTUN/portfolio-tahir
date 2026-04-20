@@ -1,0 +1,399 @@
+---
+// Neural Network / Particles Background Component
+---
+<canvas id="network-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #network-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Behind content but in front of body background */
+    pointer-events: none; /* Let clicks pass through */
+    opacity: 1; /* Opaque, vibrant effect */
+  }
+</style>
+
+<script>
+  // T A H İ R harflerinin kalıpları (koordinat ofsetleri) - Daha fazla nokta (daha yoğun harfler) eklendi
+  const letters = [
+    // T (Daha yoğun)
+    [ 
+      [-30, -30], [-20, -30], [-10, -30], [0, -30], [10, -30], [20, -30], [30, -30],
+      [0, -20], [0, -10], [0, 0], [0, 10], [0, 20], [0, 30] 
+    ],
+    // A (Daha yoğun)
+    [ 
+      [0,-30], [-5,-20], [-10,-10], [-15,0], [-20,10], [-25,20], [-30,30],
+      [5,-20], [10,-10], [15,0], [20,10], [25,20], [30,30],
+      [-12, 5], [-6, 5], [0, 5], [6, 5], [12, 5]
+    ],
+    // H (Daha yoğun)
+    [ 
+      [-20,-30], [-20,-20], [-20,-10], [-20,0], [-20,10], [-20,20], [-20,30], 
+      [20,-30], [20,-20], [20,-10], [20,0], [20,10], [20,20], [20,30], 
+      [-10,0], [0,0], [10,0] 
+    ],
+    // İ (Daha yoğun)
+    [ 
+      [0,-20], [0,-10], [0,0], [0,10], [0,20], [0,30], 
+      [0,-45], [0,-40] 
+    ],
+    // R (Daha yoğun)
+    [ 
+      [-20,-30], [-20,-20], [-20,-10], [-20,0], [-20,10], [-20,20], [-20,30], 
+      [-10,-30], [0,-30], [10,-30], [20,-20], [20,-10], [10,0], [0,0], [-10,0],
+      [0,10], [5, 15], [10,20], [15, 25], [20,30] 
+    ]
+  ];
+
+  class Particle {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    radius: number;
+    baseAlpha: number;
+    
+    // Harf oluşturma değişkenleri
+    assigned: boolean = false;
+    tx: number = 0;
+    ty: number = 0;
+    
+    // Daktilo efekti için gecikme
+    activateDelay: number = 0;
+
+    constructor(canvasWidth: number, canvasHeight: number) {
+      this.x = Math.random() * canvasWidth;
+      this.y = Math.random() * canvasHeight;
+      this.vx = (Math.random() - 0.5) * 0.6; // Yavaş zarif hareket
+      this.vy = (Math.random() - 0.5) * 0.6; 
+      this.radius = Math.random() * 2.5 + 1.2; // Biraz daha büyük, net noktalar
+      this.baseAlpha = Math.random() * 0.5 + 0.4;  // Temel parlaklığı artırdık
+    }
+
+    update(canvasWidth: number, canvasHeight: number) {
+      if (this.assigned) {
+        // Eğer bir hedefe atanmışsa (Intro veya Harf), o noktaya doğru zarifçe çekilir
+        this.x += (this.tx - this.x) * 0.05;
+        this.y += (this.ty - this.y) * 0.05;
+        this.vx *= 0.95; // Hız sönümlemesi
+        this.vy *= 0.95;
+      } else {
+        // Serbest dalgalanma
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        // Rastgele ufak hız sönümlemeleri (patlama varsa yavaşlat)
+        if (Math.abs(this.vx) > 0.6) this.vx *= 0.96;
+        if (Math.abs(this.vy) > 0.6) this.vy *= 0.96;
+        if (Math.abs(this.vx) < 0.6 && Math.random() < 0.01) this.vx += (Math.random() - 0.5) * 0.2;
+
+        // Ekran sonundan başa dönme
+        if (this.x < 0) this.x = canvasWidth;
+        if (this.x > canvasWidth) this.x = 0;
+        if (this.y < 0) this.y = canvasHeight;
+        if (this.y > canvasHeight) this.y = 0;
+      }
+    }
+
+    draw(ctx: CanvasRenderingContext2D, colorRGB: string, mouseX: number, mouseY: number, connectDistance: number, mode: string) {
+      const dx = this.x - mouseX;
+      const dy = this.y - mouseY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      let currentAlpha = this.baseAlpha;
+      let currentRadius = this.radius;
+      
+      if (mode === 'intro') {
+         // Intro ekranında noktalar tamamen opak ve daha büyük
+         currentAlpha = 1;
+         currentRadius += 1.0;
+      } else {
+         // Etkileşimde olabildiğince net (opak olmaya yakın)
+         if (this.assigned) {
+            currentAlpha = 1.0;
+            currentRadius += 1.5;
+         } else if (distance < connectDistance) {
+            const intensity = 1 - (distance / connectDistance);
+            currentAlpha += intensity * 0.4; 
+            currentRadius += intensity * 0.5;
+         }
+      }
+
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, currentRadius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${colorRGB}, ${currentAlpha})`;
+      ctx.fill();
+
+      // Mouse ile etkileşim çizgisi
+      if (mode === 'interactive' && !this.assigned && distance < connectDistance && mouseX !== -1000) {
+
+        // Çizgileri tamamen net ve kalınlaştırıyoruz
+        const lineOpacity = (1 - (distance / connectDistance));
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${colorRGB}, ${lineOpacity * 0.8})`; // Net çizgi
+        ctx.lineWidth = 1.2; // Kalın çizgi
+        ctx.moveTo(this.x, this.y);
+        const midX = (this.x + mouseX) / 2 + (Math.random() - 0.5) * 10;
+        const midY = (this.y + mouseY) / 2 + (Math.random() - 0.5) * 10;
+        ctx.quadraticCurveTo(midX, midY, mouseX, mouseY);
+        ctx.stroke();
+      }
+    }
+  }
+
+  function initNetwork() {
+    const canvas = document.getElementById('network-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let particles: Particle[] = [];
+    let animationFrameId: number;
+    let currentLetterIdx = 0;
+    
+    // Gelişmiş state yönetimi
+    let mode = 'intro'; // 'intro' -> 'interactive'
+    let introTargets: {x: number, y: number}[] = [];
+    let introStartTime = 0;
+
+    const mouse = { x: -1000, y: -1000 };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    // Intro tamamlanınca modu değiştir ve partikülleri saç
+    window.addEventListener('introComplete', () => {
+      mode = 'interactive';
+      particles.forEach(p => {
+         p.assigned = false;
+         p.vx = (Math.random() - 0.5) * 8; // Patlama efekti
+         p.vy = (Math.random() - 0.5) * 8;
+      });
+    });
+
+    // Her 2 saniyede bir mouse üzerinde oluşacak harfi değiştir (T-A-H-I-R)
+    const letterInterval = setInterval(() => {
+      currentLetterIdx = Math.floor(Math.random() * letters.length);
+    }, 2000);
+
+    // Configuration
+    const baseParticleCount = 350;
+    const connectDistance = 150;
+
+    let introTextPoints: { x: number; y: number }[] = [];
+
+    function getWelcomeText(): string {
+      const main = document.getElementById('card-container');
+      return main?.getAttribute('data-intro-welcome')?.trim() ?? '';
+    }
+
+    function sampleIntroShapeFromLetters(w: number, h: number): { x: number; y: number }[] {
+      const cx = w / 2;
+      const cy = h * 0.45;
+      const scale = Math.min(w / 400, 1.05);
+      const letterGap = 70 * scale;
+      const pts: { x: number; y: number }[] = [];
+      letters.forEach((letterPoints, li) => {
+        const offsetX = (li - (letters.length - 1) / 2) * letterGap;
+        letterPoints.forEach(([px, py]) => {
+          pts.push({ x: cx + offsetX + px * scale, y: cy + py * scale });
+        });
+      });
+      return pts;
+    }
+
+    function getParticleRgb(): string {
+      const rgb = getComputedStyle(document.documentElement).getPropertyValue('--network-particle-rgb').trim();
+      return rgb || '192, 57, 43';
+    }
+
+    function wrapLines(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+      const words = text.split(/\s+/).filter(Boolean);
+      const lines: string[] = [];
+      let line = '';
+      for (const word of words) {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = test;
+        }
+      }
+      if (line) lines.push(line);
+      return lines.length ? lines : [text];
+    }
+
+    function sampleTextPoints(text: string, w: number, h: number): { x: number; y: number }[] {
+      const c = document.createElement('canvas');
+      const ctx = c.getContext('2d');
+      if (!ctx) return [];
+      c.width = w;
+      c.height = h;
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const fontSize = Math.max(32, Math.min(w * 0.06, 64));
+      ctx.font = `700 ${fontSize}px "Inter", "Segoe UI", sans-serif`;
+      const maxW = w * 0.88;
+      const lines = wrapLines(ctx, text, maxW);
+      const lh = fontSize * 1.35;
+      const blockH = lines.length * lh;
+      const startY = h * 0.45 - blockH / 2 + lh / 2;
+      lines.forEach((ln, i) => {
+        ctx.fillText(ln, w / 2, startY + i * lh);
+      });
+      const img = ctx.getImageData(0, 0, w, h);
+      const pts: { x: number; y: number }[] = [];
+      const step = 3;
+      for (let y = 0; y < h; y += step) {
+        for (let x = 0; x < w; x += step) {
+          const a = img.data[(y * w + x) * 4 + 3];
+          if (a > 128) pts.push({ x, y });
+        }
+      }
+      for (let i = pts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pts[i], pts[j]] = [pts[j], pts[i]];
+      }
+      return pts.slice(0, Math.max(200, Math.min(baseParticleCount * 2.5, pts.length)));
+    }
+
+    function computeIntroTextPoints() {
+      const text = getWelcomeText();
+      if (!text) {
+        introTextPoints = sampleIntroShapeFromLetters(canvas.width, canvas.height);
+      } else {
+        introTextPoints = sampleTextPoints(text, canvas.width, canvas.height);
+      }
+      if (introTextPoints.length === 0) {
+        const cx = canvas.width / 2;
+        const cy = canvas.height * 0.45;
+        for (let i = 0; i < 80; i++) {
+          introTextPoints.push({
+            x: cx + (Math.random() - 0.5) * canvas.width * 0.75,
+            y: cy + (Math.random() - 0.5) * 180,
+          });
+        }
+      }
+    }
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      if (mode === 'intro') computeIntroTextPoints();
+      initParticles();
+    }
+
+    function initParticles() {
+      particles = [];
+      introStartTime = Date.now();
+      if (mode === 'intro' && introTextPoints.length === 0) computeIntroTextPoints();
+
+      for (let i = 0; i < baseParticleCount; i++) {
+        const p = new Particle(canvas.width, canvas.height);
+        if (mode === 'intro') {
+          p.assigned = true;
+          const n = Math.max(introTextPoints.length, 1);
+          const tgt = introTextPoints[i % n];
+          p.tx = tgt?.x ?? canvas.width / 2;
+          p.ty = tgt?.y ?? canvas.height * 0.45;
+          p.x = Math.random() * canvas.width;
+          p.y = Math.random() * canvas.height;
+        }
+        particles.push(p);
+      }
+    }
+
+    function animate() {
+      const baseColorRGB = getParticleRgb();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (mode === 'intro') {
+         // Noktalar sadece toplanır
+      } else if (mode === 'interactive') {
+        // Görevlendirmeleri sıfırla (sadece interactive modunda, intro modunda kalmalılar)
+        particles.forEach(p => p.assigned = false);
+
+        if (mouse.x !== -1000) {
+          // Harfi oluşturacak partikülleri belirle
+          const targetPoints = letters[currentLetterIdx];
+          
+          targetPoints.forEach(pt => {
+             const targetX = mouse.x + pt[0];
+             const targetY = mouse.y + pt[1];
+             
+             let closestParticle = null;
+             let minDist = Infinity;
+             
+             for (let p of particles) {
+               if (p.assigned) continue;
+               const dist = Math.sqrt(Math.pow(p.x - targetX, 2) + Math.pow(p.y - targetY, 2));
+               if (dist < minDist && dist < connectDistance * 1.5) {
+                  minDist = dist;
+                  closestParticle = p;
+               }
+             }
+             
+             if (closestParticle) {
+                closestParticle.assigned = true;
+                closestParticle.tx = targetX;
+                closestParticle.ty = targetY;
+             }
+          });
+        }
+      }
+
+      // Işık halesi animasyonu
+      if (mode === 'interactive' && mouse.x !== -1000) {
+        const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, connectDistance);
+        gradient.addColorStop(0, `rgba(${baseColorRGB}, 0.04)`);
+        gradient.addColorStop(1, `rgba(${baseColorRGB}, 0)`);
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, connectDistance, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      particles.forEach(p => {
+        p.update(canvas.width, canvas.height);
+        p.draw(ctx, baseColorRGB, mouse.x, mouse.y, connectDistance, mode);
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('themechange', () => {
+      /* color picks up via getParticleRgb each frame */
+    });
+    resize();
+    animate();
+
+    // Cleanup
+    const observer = new MutationObserver(() => {
+      if (!document.body.contains(canvas)) {
+        cancelAnimationFrame(animationFrameId);
+        clearInterval(letterInterval);
+        window.removeEventListener('resize', resize);
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Initialize on Astro page load
+  document.addEventListener('astro:page-load', initNetwork);
+  // Also run initially in case view transitions are off or it evaluates immediately
+  initNetwork();
+</script>

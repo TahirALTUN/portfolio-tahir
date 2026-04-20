@@ -1,0 +1,68 @@
+---
+import { getLangFromUrl } from '../i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname;
+
+let enUrl = currentPath;
+let trUrl = currentPath;
+
+if (lang === 'tr') {
+  enUrl = currentPath.replace(/^\/tr/, '') || '/';
+  trUrl = currentPath;
+} else {
+  enUrl = currentPath;
+  trUrl = '/tr' + (currentPath === '/' ? '' : currentPath);
+}
+---
+
+<div class="lang-switcher">
+  <div class="switcher-pill">
+    <a href={enUrl} class={`lang-link ${lang === 'en' ? 'active' : ''}`}>EN</a>
+    <span class="divider"></span>
+    <a href={trUrl} class={`lang-link ${lang === 'tr' ? 'active' : ''}`}>TR</a>
+  </div>
+</div>
+
+<style>
+  .lang-switcher {
+    display: inline-flex;
+  }
+
+  .switcher-pill {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: 2px solid var(--ink-high); /* Sharp solid border to match new theme */
+    border-radius: 0; /* Pure rectangle */
+    padding: 0.2rem 0.2rem;
+    transition: background var(--transition-fast);
+  }
+
+  .switcher-pill:hover {
+    background: rgba(0,0,0,0.03);
+  }
+
+  .lang-link {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-mid);
+    padding: 0.35rem 0.65rem;
+    border-radius: 0;
+    transition: color var(--transition-fast), background var(--transition-fast);
+    text-transform: uppercase;
+  }
+
+  .lang-link:hover {
+    color: var(--ink-high);
+  }
+
+  .lang-link.active {
+    color: #fff;
+    background: var(--ink-high);
+  }
+
+  .divider {
+    display: none; /* No divider needed for this sharp block style */
+  }
+</style>

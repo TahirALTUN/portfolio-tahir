@@ -1,0 +1,19 @@
+{
+  "name": "tahir-altun-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "simple-icons": "^16.14.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,960 @@
+---
+import { useTranslations } from '../i18n/utils';
+import ResumeContent from './ResumeContent.astro';
+import PortfolioContent from './PortfolioContent.astro';
+import SocialLinks from './SocialLinks.astro';
+import NetworkBackground from './NetworkBackground.astro';
+
+interface Props {
+  lang: 'en' | 'tr';
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<main class="viewport-container is-intro" id="card-container" data-intro-welcome={lang === 'tr' ? 'Hoş Geldiniz' : 'Welcome'}>
+  <NetworkBackground />
+
+  <!-- ── Intro Timeline UI ─────────────────────────────── -->
+  <div id="intro-timeline-container">
+    <div class="timeline-year" id="timeline-year">2001</div>
+    <div class="timeline-bar-wrapper">
+      <div class="timeline-progress" id="timeline-progress"></div>
+    </div>
+  </div>
+
+  <!-- ── Card 1: Resume ──────────────────────────────── -->
+  <article
+    class="interactive-card"
+    data-card-type="resume"
+    id="card-resume"
+    tabindex="0"
+    role="button"
+    aria-label={`${t('nav.resume')} — ${t('card.open')}`}
+  >
+    <div class="card-scaler">
+
+      <!-- Cover Preview -->
+      <div class="card-cover-preview resume-cover" aria-hidden="true">
+        <div class="cover-noise"></div>
+        <div class="cover-body">
+          <!-- Mini resume content -->
+          <div class="mini-resume">
+            <div class="mini-resume-header-row">
+              <img src="/profil.jpg" alt="" class="mini-profile-img" />
+              <div>
+                <div class="mini-name">Tahir Altun</div>
+                <div class="mini-identity">Learning Developer &amp; Instructional Technologist</div>
+              </div>
+            </div>
+            <div class="mini-divider"></div>
+            <div class="bio-card-elegant">
+              <p class="real-bio-text">Bridging pedagogy, design, and technology to create clear, elegant, and interactive learning experiences.</p>
+            </div>
+            <div class="mini-skills-row">
+              <span class="mini-skill">Storyline</span>
+              <span class="mini-skill">Instructional Design</span>
+              <span class="mini-skill">Frontend Interfaces</span>
+            </div>
+          </div>
+        </div>
+        <!-- Label bar -->
+        <div class="cover-label-bar">
+          <div class="cover-label-content">
+            <span class="cover-eyebrow">{t('card.open')}</span>
+            <h2 class="cover-title">{t('nav.resume')}</h2>
+          </div>
+          <div class="cover-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M7 17L17 7M17 7H7M17 7v10"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inner content (shown when expanded) -->
+      <div class="card-inner-scroll" id="scroll-resume">
+        <button class="close-btn" aria-label={t('card.close')} id="close-resume">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="card-content">
+          <ResumeContent lang={lang} />
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ── Card 2: Portfolio ───────────────────────────── -->
+  <article
+    class="interactive-card portfolio"
+    data-card-type="portfolio"
+    id="card-portfolio"
+    tabindex="0"
+    role="button"
+    aria-label={`${t('nav.portfolio')} — ${t('card.open')}`}
+  >
+    <div class="card-scaler">
+
+      <!-- Cover Preview -->
+      <div class="card-cover-preview portfolio-cover" aria-hidden="true">
+        <div class="cover-noise"></div>
+        <div class="cover-body">
+          <div class="mini-resume mini-resume--portfolio">
+            <div class="mini-resume-header-row">
+              <div class="mini-portfolio-mark" aria-hidden="true">
+                <span class="mini-portfolio-mark-inner"></span>
+              </div>
+              <div>
+                <div class="mini-name">{t('nav.portfolio')}</div>
+                <div class="mini-identity">{t('portfolio.subtitle')}</div>
+              </div>
+            </div>
+            <div class="mini-divider"></div>
+            <div class="bio-card-elegant">
+              <p class="real-bio-text">{t('portfolio.coming_soon')}</p>
+            </div>
+            <div class="mini-skills-row">
+              <span class="mini-skill">LMS</span>
+              <span class="mini-skill">AI</span>
+              <span class="mini-skill">Storyline</span>
+            </div>
+          </div>
+        </div>
+        <!-- Label bar — resume ile aynı: siyah şerit + Open / başlık -->
+        <div class="cover-label-bar">
+          <div class="cover-label-content">
+            <span class="cover-eyebrow">{t('card.open')}</span>
+            <h2 class="cover-title">{t('nav.portfolio')}</h2>
+          </div>
+          <div class="cover-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M7 17L17 7M17 7H7M17 7v10"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inner content (shown when expanded) -->
+      <div class="card-inner-scroll" id="scroll-portfolio">
+        <button class="close-btn" aria-label={t('card.close')} id="close-portfolio">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="card-content">
+          <PortfolioContent lang={lang} />
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+  <!-- Ambient background circles -->
+  <div class="ambient-orb orb-left" aria-hidden="true"></div>
+  <div class="ambient-orb orb-right" aria-hidden="true"></div>
+</main>
+
+<style>
+  /* ── Container ──────────────────────────────────────── */
+  .viewport-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: transparent; /* Changed to let body gradient show */
+  }
+
+  /* Universal noise overlay removed to maintain solid pure colors */
+  .viewport-container::after {
+    display: none;
+  }
+
+  /* Ambient decorative orbs removed for solid clean background */
+  .ambient-orb {
+    display: none;
+  }
+
+  /* ── Intro Timeline ─────────────────────────────────── */
+  #intro-timeline-container {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    width: 80%;
+    max-width: 400px;
+    opacity: 1;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  
+  #intro-timeline-container.hidden {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+    pointer-events: none;
+  }
+  
+  .timeline-year {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--ink-high);
+    letter-spacing: 0.1em;
+  }
+  
+  .timeline-bar-wrapper {
+    width: 100%;
+    height: 3px;
+    background: var(--surface-3); /* Solid border color */
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .timeline-progress {
+    height: 100%;
+    width: 0%;
+    background: var(--accent-warm); /* Solid rust */
+    transition: width 0.1s linear;
+  }
+
+  /* ── Intro UI Delay ─────────────────────────────────── */
+  .viewport-container.is-intro #card-resume,
+  .viewport-container.is-intro #card-portfolio,
+  .viewport-container.is-intro .social-links-container /* If it has a wrapper */ {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(60px); 
+    animation: none !important; /* Stop entrance animations */
+  }
+
+  .viewport-container.is-intro .ambient-orb {
+    opacity: 0; /* Clear up background for text */
+  }
+
+  /* ── Cards ──────────────────────────────────────────── */
+  .interactive-card {
+    position: absolute;
+    width: clamp(300px, 42vw, 560px);
+    height: clamp(420px, 72vh, 780px);
+    border-radius: var(--radius-xl);
+    background: var(--card-bg-primary);
+    box-shadow: var(--shadow-xl);
+    cursor: pointer;
+    transition:
+      transform var(--transition-smooth),
+      opacity var(--transition-smooth),
+      filter var(--transition-smooth),
+      box-shadow var(--transition-smooth),
+      width var(--transition-smooth),
+      height var(--transition-smooth),
+      border-radius var(--transition-smooth);
+    transform-origin: center center;
+    will-change: transform, opacity, filter;
+    z-index: 2;
+  }
+
+  .card-scaler {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+    background: var(--surface-1); /* Base warm surface */
+  }
+
+  /* Portfolio kartı — önizleme ve içerik yüzeyi özgeçmiş ile aynı sistemde */
+  #card-portfolio .card-scaler {
+    background: var(--surface-1);
+  }
+
+  /* ── Card entrance animations ────────────────────────── */
+  @keyframes cardEnterResume {
+    from {
+      opacity: 0;
+      transform: translateX(-40%) rotate(-4deg) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-18%) rotate(-2deg);
+    }
+  }
+
+  @keyframes cardEnterPortfolio {
+    from {
+      opacity: 0;
+      transform: translateX(50%) rotate(4deg) scale(0.85);
+    }
+    to {
+      opacity: 0.9;
+      transform: translateX(22%) rotate(2.5deg) scale(0.94);
+    }
+  }
+
+  /* ── Default stacked layout ─────────────────────────── */
+  #card-resume {
+    transform: translateX(-18%) rotate(-2deg);
+    z-index: 3;
+    box-shadow: var(--shadow-xl);
+    animation: cardEnterResume 0.9s cubic-bezier(0.25, 1, 0.3, 1) both;
+  }
+
+  #card-portfolio {
+    transform: translateX(22%) rotate(2.5deg) scale(0.94);
+    z-index: 2;
+    opacity: 0.9;
+    box-shadow: var(--shadow-lg);
+    animation: cardEnterPortfolio 0.9s cubic-bezier(0.25, 1, 0.3, 1) 0.12s both;
+  }
+
+  /* ── Hover states (no expanded card) ───────────────── */
+  .viewport-container:not(.has-expanded) #card-resume:hover {
+    transform: translateZ(50px) translateY(10px) rotate(-1deg) scale(1.03); /* scale eklendi */
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2), 0 0 50px rgba(192, 57, 43, 0.45); /* Şık kızıl ışık/glow eklendi */
+    z-index: 5;
+  }
+
+  .viewport-container:not(.has-expanded) #card-portfolio:hover {
+    transform: translateX(40px) translateY(-20px) rotate(2deg) translateZ(0) scale(1.03); /* scale eklendi */
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2), 0 0 50px rgba(44, 62, 80, 0.45); /* Şık mavi ışık/glow eklendi */
+    opacity: 1;
+    z-index: 5;
+  }
+
+  /* ── Sibling card recedes when one is hovered (:has()) ── */
+  .viewport-container:not(.has-expanded):has(#card-resume:hover) #card-portfolio {
+    transform: translateX(28%) rotate(3.5deg) scale(0.85); /* Slightly smaller receding */
+    opacity: 0.4;
+    z-index: 1;
+    filter: blur(4px); /* Stronger blur for stronger depth */
+  }
+
+  .viewport-container:not(.has-expanded):has(#card-portfolio:hover) #card-resume {
+    transform: translateX(-24%) rotate(-3deg) scale(0.85);
+    opacity: 0.4;
+    z-index: 1;
+    filter: blur(4px);
+  }
+
+  /* JS fallback class for browsers without :has() */
+  .viewport-container:not(.has-expanded) .interactive-card.peer-dimmed {
+    transform: scale(0.88) !important;
+    opacity: 0.5 !important;
+    z-index: 1 !important;
+    filter: blur(1.5px);
+  }
+
+  /* ── Parallax via CSS custom props (set by JS) ──────── */
+  .viewport-container:not(.has-expanded) #card-resume {
+    --parallax-x: 0px;
+    --parallax-y: 0px;
+    transform: translateX(calc(-18% + var(--parallax-x))) rotate(-2deg) translateY(var(--parallax-y));
+  }
+
+  .viewport-container:not(.has-expanded) #card-portfolio {
+    --parallax-x: 0px;
+    --parallax-y: 0px;
+    transform: translateX(calc(22% + var(--parallax-x))) rotate(2.5deg) scale(0.94) translateY(var(--parallax-y));
+  }
+
+  /* When user hovers a card, disable parallax so hover state wins */
+  .viewport-container:not(.has-expanded) #card-resume:hover,
+  .viewport-container:not(.has-expanded) #card-portfolio:hover {
+    --parallax-x: 0px;
+    --parallax-y: 0px;
+  }
+
+  /* ── Cover preview ──────────────────────────────────── */
+  .card-cover-preview {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    transition: opacity 0.4s ease;
+    overflow: hidden;
+    cursor: pointer;
+    /* Kartların içeriği koyu zemine uyumlu olsun diye açık renkli değişkenler kullanıyoruz */
+    --ink-high: #ffffff;
+    --ink-mid: rgba(255, 255, 255, 0.85);
+    --ink-low: rgba(255, 255, 255, 0.65);
+    --text-muted: rgba(255, 255, 255, 0.7);
+    --text-accent: rgba(255, 255, 255, 0.9);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --border-color-strong: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+
+  /* Subtle noise removed for solid design */
+  .cover-noise {
+    display: none;
+  }
+
+  .resume-cover {
+    background: var(--accent-warm); /* Solid Rust */
+    border: none; /* No transparent border */
+  }
+
+  .portfolio-cover {
+    background: var(--accent-cool); /* Solid Teal/Blue */
+    border: none;
+  }
+
+  .cover-body {
+    flex: 1;
+    padding: 2rem 2rem 1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Mini resume preview ────────────────────────────── */
+  .mini-resume {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .mini-resume-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .mini-profile-img {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--text-accent);
+    padding: 3px;
+    flex-shrink: 0;
+  }
+
+  .mini-portfolio-mark {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    border: 2px solid var(--text-accent);
+    padding: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .mini-portfolio-mark-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+  }
+
+  .mini-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 400;
+    color: var(--ink-high);
+    letter-spacing: -0.03em;
+  }
+
+  .mini-identity {
+    font-size: 0.78rem;
+    color: var(--text-accent);
+    font-family: var(--font-sans);
+    letter-spacing: 0.01em;
+  }
+
+  .bio-card-elegant {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .real-bio-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--ink-mid);
+    font-weight: 500;
+  }
+
+  .mini-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0.4rem 0;
+  }
+
+  /* Mini skills */
+  .mini-skills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+  }
+
+  .mini-skill {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-color-strong);
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+  }
+
+  /* ── Cover label bar ────────────────────────────────── */
+  .cover-label-bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 2rem;
+    background: #111111; /* Pure solid black foreground for maximum contrast */
+    border-top: none;
+    transition: background var(--transition-fast);
+  }
+
+  /* .interactive-card:hover .cover-label-bar IPTAL EDILDI - Siyah kalmasi istendi */
+
+  .cover-label-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .cover-eyebrow {
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+    font-family: var(--font-sans);
+    transition: color var(--transition-fast);
+  }
+
+  .cover-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    color: var(--ink-high);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .cover-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: transform var(--transition-spring), background var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .interactive-card:hover .cover-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  /* ── Inner scroll (hidden until expanded) ───────────── */
+  .card-inner-scroll {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity 0.35s ease;
+    transition-delay: 0s;
+    scroll-behavior: smooth;
+  }
+
+  .card-content {
+    padding: clamp(2.5rem, 5vw, 5rem);
+    min-height: 100%;
+  }
+
+  /* ── Close button ───────────────────────────────────── */
+  .close-btn {
+    position: sticky;
+    top: 1.5rem;
+    float: right;
+    margin-right: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: -60px; /* pull content up */
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-1); /* Solid */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-main);
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Keep shadow for depth */
+    border: 2px solid var(--border-color); /* Thicker solid border */
+  }
+
+  .close-btn:hover {
+    background: var(--text-main);
+    color: white;
+    transform: rotate(90deg) scale(1.05);
+    border-color: var(--text-main);
+  }
+
+  /* ── Expanded state ─────────────────────────────────── */
+  .interactive-card.is-expanded {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    z-index: 200 !important;
+    cursor: default;
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
+
+  .interactive-card.is-expanded .card-scaler {
+    border-radius: 0;
+    background: var(--bg-color);
+  }
+
+  .interactive-card.is-expanded .card-cover-preview {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .interactive-card.is-expanded .card-inner-scroll {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.25s;
+  }
+
+  .interactive-card.is-expanded .close-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.45s;
+  }
+
+  /* ── Blurred / inactive state ───────────────────────── */
+  .interactive-card.is-blurred {
+    filter: blur(18px) grayscale(50%);
+    opacity: 0.25;
+    transform: scale(0.85) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+    visibility: hidden; /* fully hide from pointer events and accessibility */
+  }
+
+  /* Keep expanded card above everything */
+  .interactive-card.is-expanded {
+    visibility: visible !important;
+  }
+
+  /* ── Responsive ─────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .interactive-card {
+      width: clamp(280px, 88vw, 420px);
+      height: clamp(380px, 60vh, 580px);
+    }
+
+    #card-resume {
+      transform: translateY(-16%) rotate(-1.5deg);
+    }
+
+    #card-portfolio {
+      transform: translateY(18%) rotate(2deg) scale(0.94);
+    }
+
+    .viewport-container:not(.has-expanded) #card-resume {
+      --parallax-x: 0px;
+      --parallax-y: 0px;
+      transform: translateY(calc(-16% + var(--parallax-y))) rotate(-1.5deg) translateX(var(--parallax-x));
+    }
+
+    .viewport-container:not(.has-expanded) #card-portfolio {
+      --parallax-x: 0px;
+      --parallax-y: 0px;
+      transform: translateY(calc(18% + var(--parallax-y))) rotate(2deg) scale(0.94) translateX(var(--parallax-x));
+    }
+
+    .viewport-container:not(.has-expanded) #card-resume:hover {
+      transform: translateY(-16%) rotate(-1.5deg) scale(1.02);
+    }
+
+    .viewport-container:not(.has-expanded) #card-portfolio:hover {
+      transform: translateY(18%) rotate(2deg) scale(0.97);
+    }
+
+    .cover-body { padding: 1.5rem 1.5rem 0.8rem; }
+    .card-content { padding: 2rem 1.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .cover-title { font-size: 1.3rem; }
+    .cover-arrow { width: 34px; height: 34px; }
+    .mini-profile-img { width: 50px; height: 50px; padding: 2px; }
+    .mini-resume-header-row { gap: 0.9rem; }
+  }
+</style>
+
+<script>
+  function initCards() {
+    const container = document.getElementById('card-container') as HTMLElement | null;
+    const cards = document.querySelectorAll<HTMLElement>('.interactive-card');
+    const closeBtns = document.querySelectorAll<HTMLButtonElement>('.close-btn');
+    let activeObserver: IntersectionObserver | null = null;
+    let isLargeScreen = window.matchMedia('(min-width: 769px)').matches;
+
+    if (!container) return;
+
+    // ── Timeline & Intro Sequence ──────────────────────
+    function startIntroTimeline() {
+      const timelineContainer = document.getElementById('intro-timeline-container');
+      const progress = document.getElementById('timeline-progress');
+      const yearLabel = document.getElementById('timeline-year');
+      
+      const duration = 6000; // 6.0 seconds for intro sequence (uzatıldı)
+      const startYear = 2001;
+      const endYear = 2026;
+      let startTime: number | null = null;
+      
+      function animateTimeline(time: number) {
+        if (!startTime) startTime = time;
+        const elapsed = time - startTime;
+        const p = Math.min(elapsed / duration, 1);
+        
+        // Easing applied to text count (slows down at the end)
+        const easeOutQuad = 1 - (1 - p) * (1 - p);
+        const currentYear = Math.floor(startYear + (endYear - startYear) * easeOutQuad);
+        
+        if (yearLabel) yearLabel.innerText = currentYear.toString();
+        if (progress) progress.style.width = (p * 100) + '%';
+        
+        if (p < 1) {
+          requestAnimationFrame(animateTimeline);
+        } else {
+          // Finish Intro Sequence
+          if (timelineContainer) timelineContainer.classList.add('hidden');
+          
+          window.dispatchEvent(new CustomEvent('introComplete'));
+          
+          // Mark intro as completed for this session
+          try { sessionStorage.setItem('intro-played', '1'); } catch(e) {}
+          
+          setTimeout(() => {
+            // Remove the block, this natively allows CSS entrance animations to run
+            container.classList.remove('is-intro');
+          }, 600); // Wait for the particles to explode nicely
+        }
+      }
+      
+      requestAnimationFrame(animateTimeline);
+    }
+    
+    // Only run intro if it hasn't been played in this session
+    if (container.classList.contains('is-intro')) {
+      let introAlreadyPlayed = false;
+      try { introAlreadyPlayed = sessionStorage.getItem('intro-played') === '1'; } catch(e) {}
+      
+      if (introAlreadyPlayed) {
+        // Skip the intro entirely — show cards immediately
+        const timelineContainer = document.getElementById('intro-timeline-container');
+        if (timelineContainer) {
+          timelineContainer.style.display = 'none';
+        }
+        container.classList.remove('is-intro');
+        window.dispatchEvent(new CustomEvent('introComplete'));
+      } else {
+        // 300ms delay to give canvas time to map text pixels
+        setTimeout(startIntroTimeline, 300);
+      }
+    }
+
+    // ── Helpers ────────────────────────────────────────
+    function lockBody() {
+      document.body.classList.add('locked', 'card-open');
+    }
+
+    function unlockBody() {
+      document.body.classList.remove('locked', 'card-open');
+    }
+
+    function createScrollObserver(root: Element) {
+      return new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { root, threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
+    }
+
+    function startObserving(card: HTMLElement) {
+      if (activeObserver) activeObserver.disconnect();
+      const scrollEl = card.querySelector('.card-inner-scroll');
+      if (!scrollEl) return;
+      activeObserver = createScrollObserver(scrollEl);
+      card.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        el.classList.remove('is-visible');
+        activeObserver!.observe(el);
+      });
+      // Immediately mark first visible items (those near top)
+      setTimeout(() => {
+        card.querySelectorAll('.reveal-on-scroll').forEach((el, i) => {
+          if (i < 2) el.classList.add('is-visible');
+        });
+      }, 400);
+    }
+
+    function stopObserving(card: HTMLElement) {
+      if (activeObserver) {
+        activeObserver.disconnect();
+        activeObserver = null;
+      }
+      card.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        el.classList.remove('is-visible');
+      });
+    }
+
+    // ── Expand ─────────────────────────────────────────
+    function expandCard(card: HTMLElement) {
+      if (card.classList.contains('is-expanded')) return;
+      cards.forEach(c => {
+        if (c === card) {
+          c.classList.add('is-expanded');
+          c.classList.remove('is-blurred');
+          // Scroll content back to top
+          const scroll = c.querySelector('.card-inner-scroll');
+          if (scroll) scroll.scrollTop = 0;
+        } else {
+          c.classList.add('is-blurred');
+          c.classList.remove('is-expanded');
+        }
+      });
+      container.classList.add('has-expanded');
+      lockBody();
+      startObserving(card);
+    }
+
+    // ── Collapse ───────────────────────────────────────
+    function collapseAll() {
+      cards.forEach(c => {
+        stopObserving(c);
+        c.classList.remove('is-expanded', 'is-blurred');
+      });
+      container.classList.remove('has-expanded');
+      unlockBody();
+    }
+
+    // ── Hover sibling dimming (JS fallback for :has()) ──
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        if (container.classList.contains('has-expanded')) return;
+        cards.forEach(c => {
+          if (c !== card) c.classList.add('peer-dimmed');
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        cards.forEach(c => c.classList.remove('peer-dimmed'));
+      });
+    });
+
+    // ── Card click ────────────────────────────────────
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        if (!card.classList.contains('is-expanded')) expandCard(card);
+      });
+      card.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !card.classList.contains('is-expanded')) {
+          e.preventDefault();
+          expandCard(card);
+        }
+      });
+    });
+
+    // ── Close buttons ─────────────────────────────────
+    closeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        collapseAll();
+      });
+    });
+
+    // ── Escape key ────────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && container.classList.contains('has-expanded')) collapseAll();
+    });
+
+    // ── Mouse parallax ────────────────────────────────
+    let rafId: number | null = null;
+    container.addEventListener('mousemove', (e) => {
+      if (container.classList.contains('has-expanded')) return;
+      if (!isLargeScreen) return;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const rect = container.getBoundingClientRect();
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const mx = (e.clientX - rect.left - cx) / cx; // -1 to 1
+        const my = (e.clientY - rect.top - cy) / cy;
+
+        const resumeCard = document.getElementById('card-resume');
+        const portfolioCard = document.getElementById('card-portfolio');
+
+        if (resumeCard && !resumeCard.matches(':hover')) {
+          resumeCard.style.setProperty('--parallax-x', `${mx * 10}px`);
+          resumeCard.style.setProperty('--parallax-y', `${my * 6}px`);
+        }
+        if (portfolioCard && !portfolioCard.matches(':hover')) {
+          portfolioCard.style.setProperty('--parallax-x', `${-mx * 12}px`);
+          portfolioCard.style.setProperty('--parallax-y', `${-my * 8}px`);
+        }
+      });
+    });
+
+    container.addEventListener('mouseleave', () => {
+      cards.forEach(card => {
+        card.style.setProperty('--parallax-x', '0px');
+        card.style.setProperty('--parallax-y', '0px');
+      });
+    });
+
+    // ── Responsive resize ─────────────────────────────
+    window.addEventListener('resize', () => {
+      isLargeScreen = window.matchMedia('(min-width: 769px)').matches;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initCards);
+  document.addEventListener('astro:page-load', initCards);
+</script>

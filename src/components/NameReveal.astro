@@ -1,0 +1,108 @@
+---
+---
+
+<div class="name-reveal-container">
+  <h1 class="main-name" id="typewriter-name" aria-label="Tahir Altun">
+    <span class="typewriter-text" id="typewriter-text" aria-hidden="true"></span>
+    <span class="typewriter-cursor" id="typewriter-cursor" aria-hidden="true">|</span>
+  </h1>
+  <div class="underline-reveal" id="name-underline" aria-hidden="true"></div>
+</div>
+
+<style>
+  .name-reveal-container {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 0.5rem;
+    min-height: 1.1em; /* prevent layout shift */
+  }
+
+  .main-name {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    letter-spacing: -0.01em; /* Looser, editorial spacing */
+    color: var(--ink-high);
+    display: flex;
+    align-items: baseline;
+    padding-bottom: 0.15em;
+    line-height: 1.05;
+  }
+
+  .typewriter-text {
+    display: inline;
+    white-space: pre;
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    font-weight: 300;
+    color: var(--accent-warm);
+    margin-left: 1px;
+    animation: cursorBlink 530ms steps(1) infinite;
+  }
+
+  .typewriter-cursor.fade-out {
+    animation: cursorFadeOut 0.8s ease forwards;
+  }
+
+  .underline-reveal {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 1px; /* Thinner, more elegant */
+    background: linear-gradient(to right, var(--accent-warm), transparent);
+    width: 0;
+    border-radius: var(--radius-pill);
+    opacity: 0;
+  }
+
+  .underline-reveal.animate {
+    animation: underlineGrow 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; /* Smoother curve */
+  }
+
+  @media (max-width: 480px) {
+    .main-name {
+      font-size: clamp(2rem, 8vw, 3rem);
+    }
+  }
+</style>
+
+<script>
+  function initTypewriter() {
+    const textEl = document.getElementById('typewriter-text');
+    const cursorEl = document.getElementById('typewriter-cursor');
+    const underlineEl = document.getElementById('name-underline');
+    if (!textEl || !cursorEl || !underlineEl) return;
+
+    const fullText = 'Tahir Altun';
+    let index = 0;
+
+    // Reset for astro page transitions
+    textEl.textContent = '';
+    cursorEl.classList.remove('fade-out');
+    underlineEl.classList.remove('animate');
+
+    function typeChar() {
+      if (index < fullText.length) {
+        textEl.textContent += fullText[index];
+        index++;
+        setTimeout(typeChar, 85); /* Slightly slower for luxury feel */
+      } else {
+        // Typing done — trigger underline and fade cursor
+        setTimeout(() => {
+          underlineEl.classList.add('animate');
+        }, 200);
+        setTimeout(() => {
+          cursorEl.classList.add('fade-out');
+        }, 1200);
+      }
+    }
+
+    // Initial delay to let the page settle
+    setTimeout(typeChar, 300);
+  }
+
+  document.addEventListener('DOMContentLoaded', initTypewriter);
+  document.addEventListener('astro:page-load', initTypewriter);
+</script>
