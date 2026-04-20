@@ -14,11 +14,16 @@ const homeHref = lang === 'tr' ? '/tr' : '/';
 <header class="top-navbar">
   <div class="nav-content">
     <div class="nav-left">
-      <a href={homeHref} class="nav-logo" aria-label={lang === 'tr' ? 'Ana sayfa' : 'Home'}>T. ALTUN</a>
+      <a href={homeHref} class="nav-logo" aria-label={lang === 'tr' ? 'Ana sayfa' : 'Home'}>
+        <span class="logo-text">T. ALTUN</span>
+        <img src="/favicon-ta.png" alt="Logo" class="logo-img" />
+      </a>
     </div>
     
     <div class="nav-right">
-      <SocialLinks />
+      <div class="nav-socials">
+        <SocialLinks />
+      </div>
       <div class="nav-divider"></div>
       <div class="nav-controls">
         <LanguageSwitcher />
@@ -86,11 +91,20 @@ const homeHref = lang === 'tr' ? '/tr' : '/';
     letter-spacing: -0.02em;
     border: 2px solid var(--ink-high);
     padding: 0.35rem 0.85rem;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition:
       background var(--transition-fast),
       color var(--transition-fast),
       border-color var(--transition-fast);
+  }
+
+  .logo-img {
+    display: none;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
   }
 
   .nav-logo:hover {
@@ -101,7 +115,12 @@ const homeHref = lang === 'tr' ? '/tr' : '/';
   .nav-right {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: clamp(0.5rem, 2vw, 1.5rem);
+  }
+
+  .nav-socials {
+    display: flex;
+    align-items: center;
   }
 
   .nav-controls {
@@ -118,11 +137,40 @@ const homeHref = lang === 'tr' ? '/tr' : '/';
   }
 
   @media (max-width: 768px) {
+    .top-navbar {
+      height: 64px;
+    }
     .nav-content {
-      padding: 0 1.5rem;
+      padding: 0 1rem;
+    }
+    .logo-text {
+      display: none;
+    }
+    .logo-img {
+      display: block;
     }
     .nav-logo {
-      font-size: 1.25rem;
+      padding: 0.3rem;
+      border-width: 2px;
+    }
+    .nav-right {
+      gap: 0.5rem;
+    }
+    .nav-divider {
+      height: 16px;
+      margin: 0 2px;
+    }
+    .nav-controls {
+      gap: 0.4rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-content {
+      padding: 0 0.75rem;
+    }
+    .nav-socials {
+      display: flex;
     }
   }
 </style>

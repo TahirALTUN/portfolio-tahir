@@ -30,8 +30,18 @@ const { title, lang } = Astro.props;
 						return;
 					}
 				} catch (e) {}
-				if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+
+				// Auto theme based on time: 21:00 - 06:00 is Dark
+				var hour = new Date().getHours();
+				if (hour >= 21 || hour < 6) {
 					document.documentElement.setAttribute('data-theme', 'dark');
+				} else {
+					// Fallback to system preference if it's during the day
+					if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+						document.documentElement.setAttribute('data-theme', 'dark');
+					} else {
+						document.documentElement.removeAttribute('data-theme');
+					}
 				}
 			})();
 		</script>

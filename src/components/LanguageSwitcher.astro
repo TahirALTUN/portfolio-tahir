@@ -32,9 +32,9 @@ if (lang === 'tr') {
     display: flex;
     align-items: center;
     background: transparent;
-    border: 2px solid var(--ink-high); /* Sharp solid border to match new theme */
-    border-radius: 0; /* Pure rectangle */
-    padding: 0.2rem 0.2rem;
+    border: 1px solid var(--ink-high);
+    border-radius: 0;
+    padding: 0.15rem;
     transition: background var(--transition-fast);
   }
 
@@ -43,11 +43,11 @@ if (lang === 'tr') {
   }
 
   .lang-link {
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     color: var(--ink-mid);
-    padding: 0.35rem 0.65rem;
+    padding: 0.25rem 0.45rem;
     border-radius: 0;
     transition: color var(--transition-fast), background var(--transition-fast);
     text-transform: uppercase;
@@ -63,6 +63,13 @@ if (lang === 'tr') {
   }
 
   .divider {
-    display: none; /* No divider needed for this sharp block style */
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    .lang-link {
+      font-size: 0.6rem;
+      padding: 0.2rem 0.35rem;
+    }
   }
 </style>

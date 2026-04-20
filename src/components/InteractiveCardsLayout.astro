@@ -208,7 +208,7 @@ const t = useTranslations(lang);
   
   .timeline-year {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.8rem, 8vw, 3rem);
     color: var(--ink-high);
     letter-spacing: 0.1em;
   }
@@ -276,6 +276,13 @@ const t = useTranslations(lang);
   /* Portfolio kartı — önizleme ve içerik yüzeyi özgeçmiş ile aynı sistemde */
   #card-portfolio .card-scaler {
     background: var(--surface-1);
+  }
+
+  .logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block !important; /* Ensure it's never hidden if present */
   }
 
   /* ── Card entrance animations ────────────────────────── */
@@ -354,24 +361,28 @@ const t = useTranslations(lang);
     filter: blur(1.5px);
   }
 
-  /* ── Parallax via CSS custom props (set by JS) ──────── */
-  .viewport-container:not(.has-expanded) #card-resume {
-    --parallax-x: 0px;
-    --parallax-y: 0px;
-    transform: translateX(calc(-18% + var(--parallax-x))) rotate(-2deg) translateY(var(--parallax-y));
-  }
+  /* Parallax via CSS custom props (set by JS) */
+  @media (min-width: 769px) {
+    .viewport-container:not(.has-expanded) #card-resume {
+      --parallax-x: 0px;
+      --parallax-y: 0px;
+      transform: translateX(calc(-18% + var(--parallax-x))) rotate(-2deg) translateY(var(--parallax-y));
+    }
 
-  .viewport-container:not(.has-expanded) #card-portfolio {
-    --parallax-x: 0px;
-    --parallax-y: 0px;
-    transform: translateX(calc(22% + var(--parallax-x))) rotate(2.5deg) scale(0.94) translateY(var(--parallax-y));
-  }
+    .viewport-container:not(.has-expanded) #card-portfolio {
+      --parallax-x: 0px;
+      --parallax-y: 0px;
+      transform: translateX(calc(22% + var(--parallax-x))) rotate(2.5deg) scale(0.94) translateY(var(--parallax-y));
+    }
 
-  /* When user hovers a card, disable parallax so hover state wins */
-  .viewport-container:not(.has-expanded) #card-resume:hover,
-  .viewport-container:not(.has-expanded) #card-portfolio:hover {
-    --parallax-x: 0px;
-    --parallax-y: 0px;
+    /* When user hovers a card, disable parallax so hover state wins */
+    .viewport-container:not(.has-expanded) #card-resume:hover {
+      transform: translateZ(50px) translateY(10px) rotate(-1deg) scale(1.03);
+    }
+
+    .viewport-container:not(.has-expanded) #card-portfolio:hover {
+      transform: translateX(40px) translateY(-20px) rotate(2deg) translateZ(0) scale(1.03);
+    }
   }
 
   /* ── Cover preview ──────────────────────────────────── */
@@ -471,7 +482,7 @@ const t = useTranslations(lang);
 
   .mini-name {
     font-family: var(--font-display);
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-size: clamp(1.2rem, 5vw, 2rem);
     font-weight: 400;
     color: var(--ink-high);
     letter-spacing: -0.03em;
@@ -515,12 +526,13 @@ const t = useTranslations(lang);
   }
 
   .mini-skill {
-    font-size: 0.65rem;
-    padding: 0.2rem 0.6rem;
+    font-size: 0.62rem;
+    padding: 0.15rem 0.5rem;
     border-radius: var(--radius-pill);
     border: 1px solid var(--border-color-strong);
     color: var(--text-muted);
     font-family: var(--font-sans);
+    white-space: nowrap;
   }
 
   /* ── Cover label bar ────────────────────────────────── */
@@ -685,40 +697,43 @@ const t = useTranslations(lang);
   /* ── Responsive ─────────────────────────────────────── */
   @media (max-width: 768px) {
     .interactive-card {
-      width: clamp(280px, 88vw, 420px);
-      height: clamp(380px, 60vh, 580px);
+      /* İçeriğin sığması için yükseklik artırıldı, form yan yana kalmaya devam ediyor */
+      width: clamp(240px, 70vw, 290px);
+      height: clamp(320px, 85vw, 400px);
+      left: 50% !important;
+      top: 50% !important;
     }
 
     #card-resume {
-      transform: translateY(-16%) rotate(-1.5deg);
+      /* Yatay yan yana yerleşim (Horizontal overlap) */
+      transform: translate(calc(-50% - 35px), -50%) rotate(-2deg) !important;
+      z-index: 3;
     }
 
     #card-portfolio {
-      transform: translateY(18%) rotate(2deg) scale(0.94);
-    }
-
-    .viewport-container:not(.has-expanded) #card-resume {
-      --parallax-x: 0px;
-      --parallax-y: 0px;
-      transform: translateY(calc(-16% + var(--parallax-y))) rotate(-1.5deg) translateX(var(--parallax-x));
-    }
-
-    .viewport-container:not(.has-expanded) #card-portfolio {
-      --parallax-x: 0px;
-      --parallax-y: 0px;
-      transform: translateY(calc(18% + var(--parallax-y))) rotate(2deg) scale(0.94) translateX(var(--parallax-x));
+      transform: translate(calc(-50% + 40px), -50%) rotate(2.5deg) scale(0.94) !important;
+      z-index: 2;
+      opacity: 0.9;
     }
 
     .viewport-container:not(.has-expanded) #card-resume:hover {
-      transform: translateY(-16%) rotate(-1.5deg) scale(1.02);
+      transform: translate(calc(-50% - 35px), -50%) rotate(-1deg) scale(1.03) !important;
     }
 
     .viewport-container:not(.has-expanded) #card-portfolio:hover {
-      transform: translateY(18%) rotate(2deg) scale(0.97);
+      transform: translate(calc(-50% + 40px), -50%) rotate(2deg) scale(0.98) !important;
+      opacity: 1;
     }
 
-    .cover-body { padding: 1.5rem 1.5rem 0.8rem; }
-    .card-content { padding: 2rem 1.5rem; }
+    .cover-body { padding: 1rem 0.9rem 0.5rem; }
+    .card-content { padding: 1.8rem 1rem; }
+    .cover-label-bar { padding: 0.8rem 1.2rem; }
+    .mini-resume { gap: 0.5rem; }
+    .mini-profile-img, .mini-portfolio-mark { width: 44px; height: 44px; }
+    .mini-name { font-size: 1.2rem; }
+    .mini-identity { font-size: 0.65rem; }
+    .real-bio-text { font-size: 0.82rem; line-height: 1.4; }
+    .cover-title { font-size: 1.4rem; } /* Özgeçmiş yazısı boyutu */
   }
 
   @media (max-width: 480px) {
