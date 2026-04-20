@@ -325,13 +325,13 @@ const t = useTranslations(lang);
   }
 
   /* ── Hover states (no expanded card) ───────────────── */
-  .viewport-container:not(.has-expanded) #card-resume:hover {
+  body:not(.has-expanded) .viewport-container #card-resume:hover {
     transform: translateZ(50px) translateY(10px) rotate(-1deg) scale(1.03); /* scale eklendi */
     box-shadow: 0 24px 60px rgba(0,0,0,0.2), 0 0 50px rgba(192, 57, 43, 0.45); /* Şık kızıl ışık/glow eklendi */
     z-index: 5;
   }
 
-  .viewport-container:not(.has-expanded) #card-portfolio:hover {
+  body:not(.has-expanded) .viewport-container #card-portfolio:hover {
     transform: translateX(40px) translateY(-20px) rotate(2deg) translateZ(0) scale(1.03); /* scale eklendi */
     box-shadow: 0 24px 60px rgba(0,0,0,0.2), 0 0 50px rgba(44, 62, 80, 0.45); /* Şık mavi ışık/glow eklendi */
     opacity: 1;
@@ -339,14 +339,14 @@ const t = useTranslations(lang);
   }
 
   /* ── Sibling card recedes when one is hovered (:has()) ── */
-  .viewport-container:not(.has-expanded):has(#card-resume:hover) #card-portfolio {
+  body:not(.has-expanded) .viewport-container:has(#card-resume:hover) #card-portfolio {
     transform: translateX(28%) rotate(3.5deg) scale(0.85); /* Slightly smaller receding */
     opacity: 0.4;
     z-index: 1;
     filter: blur(4px); /* Stronger blur for stronger depth */
   }
 
-  .viewport-container:not(.has-expanded):has(#card-portfolio:hover) #card-resume {
+  body:not(.has-expanded) .viewport-container:has(#card-portfolio:hover) #card-resume {
     transform: translateX(-24%) rotate(-3deg) scale(0.85);
     opacity: 0.4;
     z-index: 1;
@@ -354,7 +354,7 @@ const t = useTranslations(lang);
   }
 
   /* JS fallback class for browsers without :has() */
-  .viewport-container:not(.has-expanded) .interactive-card.peer-dimmed {
+  body:not(.has-expanded) .viewport-container .interactive-card.peer-dimmed {
     transform: scale(0.88) !important;
     opacity: 0.5 !important;
     z-index: 1 !important;
@@ -363,24 +363,24 @@ const t = useTranslations(lang);
 
   /* Parallax via CSS custom props (set by JS) */
   @media (min-width: 769px) {
-    .viewport-container:not(.has-expanded) #card-resume {
+    body:not(.has-expanded) .viewport-container #card-resume {
       --parallax-x: 0px;
       --parallax-y: 0px;
       transform: translateX(calc(-18% + var(--parallax-x))) rotate(-2deg) translateY(var(--parallax-y));
     }
 
-    .viewport-container:not(.has-expanded) #card-portfolio {
+    body:not(.has-expanded) .viewport-container #card-portfolio {
       --parallax-x: 0px;
       --parallax-y: 0px;
       transform: translateX(calc(22% + var(--parallax-x))) rotate(2.5deg) scale(0.94) translateY(var(--parallax-y));
     }
 
     /* When user hovers a card, disable parallax so hover state wins */
-    .viewport-container:not(.has-expanded) #card-resume:hover {
+    body:not(.has-expanded) .viewport-container #card-resume:hover {
       transform: translateZ(50px) translateY(10px) rotate(-1deg) scale(1.03);
     }
 
-    .viewport-container:not(.has-expanded) #card-portfolio:hover {
+    body:not(.has-expanded) .viewport-container #card-portfolio:hover {
       transform: translateX(40px) translateY(-20px) rotate(2deg) translateZ(0) scale(1.03);
     }
   }
@@ -642,7 +642,9 @@ const t = useTranslations(lang);
     border-color: var(--text-main);
   }
 
-  /* ── Expanded state ─────────────────────────────────── */
+  /* ── Expanded state (Extreme specificity to override all layout transforms) ── */
+  .viewport-container .interactive-card.is-expanded#card-resume,
+  .viewport-container .interactive-card.is-expanded#card-portfolio,
   .interactive-card.is-expanded {
     position: fixed !important;
     top: 0 !important;
@@ -716,11 +718,11 @@ const t = useTranslations(lang);
       opacity: 0.9;
     }
 
-    .viewport-container:not(.has-expanded) #card-resume:hover {
+    body:not(.has-expanded) .viewport-container #card-resume:hover {
       transform: translate(calc(-50% - 35px), -50%) rotate(-1deg) scale(1.03) !important;
     }
 
-    .viewport-container:not(.has-expanded) #card-portfolio:hover {
+    body:not(.has-expanded) .viewport-container #card-portfolio:hover {
       transform: translate(calc(-50% + 40px), -50%) rotate(2deg) scale(0.98) !important;
       opacity: 1;
     }
@@ -861,7 +863,6 @@ const t = useTranslations(lang);
       });
     }
 
-    // ── Expand ─────────────────────────────────────────
     function expandCard(card: HTMLElement) {
       if (card.classList.contains('is-expanded')) return;
       cards.forEach(c => {
@@ -876,7 +877,7 @@ const t = useTranslations(lang);
           c.classList.remove('is-expanded');
         }
       });
-      container.classList.add('has-expanded');
+      document.body.classList.add('has-expanded');
       lockBody();
       startObserving(card);
     }
@@ -887,14 +888,13 @@ const t = useTranslations(lang);
         stopObserving(c);
         c.classList.remove('is-expanded', 'is-blurred');
       });
-      container.classList.remove('has-expanded');
+      document.body.classList.remove('has-expanded');
       unlockBody();
     }
 
-    // ── Hover sibling dimming (JS fallback for :has()) ──
     cards.forEach(card => {
       card.addEventListener('mouseenter', () => {
-        if (container.classList.contains('has-expanded')) return;
+        if (document.body.classList.contains('has-expanded')) return;
         cards.forEach(c => {
           if (c !== card) c.classList.add('peer-dimmed');
         });
@@ -925,15 +925,14 @@ const t = useTranslations(lang);
       });
     });
 
-    // ── Escape key ────────────────────────────────────
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && container.classList.contains('has-expanded')) collapseAll();
+      if (e.key === 'Escape' && document.body.classList.contains('has-expanded')) collapseAll();
     });
 
     // ── Mouse parallax ────────────────────────────────
     let rafId: number | null = null;
     container.addEventListener('mousemove', (e) => {
-      if (container.classList.contains('has-expanded')) return;
+      if (document.body.classList.contains('has-expanded')) return;
       if (!isLargeScreen) return;
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
