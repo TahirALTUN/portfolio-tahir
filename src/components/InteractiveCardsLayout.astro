@@ -699,9 +699,9 @@ const t = useTranslations(lang);
   /* ── Responsive ─────────────────────────────────────── */
   @media (max-width: 768px) {
     .interactive-card {
-      /* İçeriğin sığması için yükseklik artırıldı, form yan yana kalmaya devam ediyor */
-      width: clamp(240px, 70vw, 290px);
-      height: clamp(320px, 85vw, 400px);
+      /* İçeriğin tam oturması için yükseklik artırıldı, yazının kesilmesi önlendi */
+      width: clamp(250px, 75vw, 300px);
+      height: clamp(380px, 110vw, 440px);
       left: 50% !important;
       top: 50% !important;
     }
@@ -727,15 +727,16 @@ const t = useTranslations(lang);
       opacity: 1;
     }
 
-    .cover-body { padding: 1rem 0.9rem 0.5rem; }
+    .cover-body { padding: 1rem 1rem 0.5rem; }
     .card-content { padding: 1.8rem 1rem; }
-    .cover-label-bar { padding: 0.8rem 1.2rem; }
+    .cover-label-bar { padding: 1rem 1.2rem; }
+    .bio-card-elegant { padding: 0.6rem 0.8rem; }
     .mini-resume { gap: 0.5rem; }
-    .mini-profile-img, .mini-portfolio-mark { width: 44px; height: 44px; }
-    .mini-name { font-size: 1.2rem; }
-    .mini-identity { font-size: 0.65rem; }
-    .real-bio-text { font-size: 0.82rem; line-height: 1.4; }
-    .cover-title { font-size: 1.4rem; } /* Özgeçmiş yazısı boyutu */
+    .mini-profile-img, .mini-portfolio-mark { width: 50px; height: 50px; }
+    .mini-name { font-size: 1.3rem; }
+    .mini-identity { font-size: 0.7rem; }
+    .real-bio-text { font-size: 0.85rem; line-height: 1.4; }
+    .cover-title { font-size: 1.5rem; } /* Özgeçmiş yazısı boyutu */
   }
 
   @media (max-width: 480px) {
