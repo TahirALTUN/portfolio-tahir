@@ -546,6 +546,8 @@ const t = useTranslations(lang);
     background: #111111; /* Pure solid black foreground for maximum contrast */
     border-top: none;
     transition: background var(--transition-fast);
+    flex-shrink: 0; /* Ensures the label bar is never pushed out and cut off */
+    margin-top: auto;
   }
 
   /* .interactive-card:hover .cover-label-bar IPTAL EDILDI - Siyah kalmasi istendi */
@@ -700,8 +702,8 @@ const t = useTranslations(lang);
   @media (max-width: 768px) {
     .interactive-card {
       /* İçeriğin tam oturması için yükseklik artırıldı, yazının kesilmesi önlendi */
-      width: clamp(250px, 75vw, 300px);
-      height: clamp(380px, 110vw, 440px);
+      width: clamp(260px, 75vw, 310px);
+      height: 480px; /* Sabit cömert yükseklik - Asla kesilmeyecek */
       left: 50% !important;
       top: 50% !important;
     }
